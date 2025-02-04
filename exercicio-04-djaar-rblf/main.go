@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: go run main.go [server|client]")
+	if len(os.Args) < 3 {
+		fmt.Println("Usage: go run main.go [tcp|udp] [server|client]")
 		os.Exit(1)
 	}
 	switch os.Args[1] {
@@ -33,7 +33,7 @@ func main() {
 		case "server":
 			udp.Server()
 		case "client":
-			udpResult := udp.Client(5, 3)
+			udpResult := udp.Client(1000, 40)
 			fmt.Println("Average RTT time:", udpResult.Average, "ms")
 			fmt.Println("Median RTT time:", udpResult.Median, "ms")
 			fmt.Println("Variance RTT time:", udpResult.Variance, "ms")
