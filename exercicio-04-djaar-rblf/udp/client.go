@@ -1,8 +1,9 @@
-package tcp
+package udp
 
 import (
 	"encoding/json"
 	"exercicio-04-djaar-rblf/shared"
+	"fmt"
 	"math/rand"
 	"net"
 	"time"
@@ -18,17 +19,17 @@ func Client(invocations int, matrix_size int) Result {
 	var response shared.Reply
 	RTTList := [](float64){}
 
-	r, err := net.ResolveTCPAddr("tcp", "localhost:8080")
+	r, err := net.ResolveUDPAddr("udp", "localhost:8080")
 	if err != nil {
 		panic(err)
 	}
 
-	conn, err := net.DialTCP("tcp", nil, r)
+	conn, err := net.DialUDP("udp", nil, r)
 	if err != nil {
 		panic(err)
 	}
 
-	defer func(conn *net.TCPConn) {
+	defer func(conn *net.UDPConn) {
 		err := conn.Close()
 		if err != nil {
 			panic(err)
@@ -49,7 +50,7 @@ func Client(invocations int, matrix_size int) Result {
 		if err != nil {
 			panic(err)
 		}
-
+		fmt.Println("hi")
 		err = jsonDecoder.Decode(&response)
 		if err != nil {
 			panic(err)
