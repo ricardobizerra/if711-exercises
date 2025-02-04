@@ -3,7 +3,6 @@ package tcp
 import (
 	"encoding/json"
 	"exercicio-04-djaar-rblf/shared"
-	"math/rand"
 	"net"
 	"time"
 )
@@ -39,7 +38,7 @@ func Client(invocations int, matrix_size int) Result {
 	jsonEncoder := json.NewEncoder(conn)
 
 	for i := 0; i < invocations; i++ {
-		a, b := generateRandomMatrixes(matrix_size)
+		a, b := shared.GenerateRandomMatrixes(matrix_size)
 
 		msgToServer := shared.Request{Operation: "Mul", A: a, B: b}
 
@@ -66,23 +65,4 @@ func Client(invocations int, matrix_size int) Result {
 		Median:   shared.CalculateMedian(RTTList),
 		Variance: shared.CalculateVariance(RTTList, average),
 	}
-}
-
-func generateRandomMatrixes(size int) ([][]int, [][]int) {
-	a := make([][]int, size)
-	b := make([][]int, size)
-
-	for i := range a {
-		a[i] = make([]int, size)
-		b[i] = make([]int, size)
-	}
-
-	for i := 0; i < size; i++ {
-		for j := 0; j < size; j++ {
-			a[i][j] = rand.Intn(100)
-			b[i][j] = rand.Intn(100)
-		}
-	}
-
-	return a, b
 }
