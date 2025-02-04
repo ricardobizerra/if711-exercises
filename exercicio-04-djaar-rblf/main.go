@@ -18,7 +18,7 @@ func main() {
 		case "server":
 			tcp.Server()
 		case "client":
-			tcpResult := tcp.Client(1000, 40)
+			tcpResult := tcp.Client(10000, 60, 100)
 
 			fmt.Println("Average RTT time:", tcpResult.Average, "ms")
 			fmt.Println("Median RTT time:", tcpResult.Median, "ms")
@@ -33,7 +33,7 @@ func main() {
 		case "server":
 			udp.Server()
 		case "client":
-			udpResult := udp.Client(1000, 40)
+			udpResult := udp.Client(10000, 60, 100)
 			fmt.Println("Average RTT time:", udpResult.Average, "ms")
 			fmt.Println("Median RTT time:", udpResult.Median, "ms")
 			fmt.Println("Variance RTT time:", udpResult.Variance, "ms")

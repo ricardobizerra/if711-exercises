@@ -2,19 +2,19 @@ package shared
 
 import "math/rand"
 
-func GenerateRandomMatrixes(size int) ([][]int, [][]int) {
-	a := make([][]int, size)
-	b := make([][]int, size)
+func GenerateRandomMatrixes(dim int, max_value int) ([][]int, [][]int) {
+	a := make([][]int, dim)
+	b := make([][]int, dim)
 
 	for i := range a {
-		a[i] = make([]int, size)
-		b[i] = make([]int, size)
+		a[i] = make([]int, dim)
+		b[i] = make([]int, dim)
 	}
 
-	for i := 0; i < size; i++ {
-		for j := 0; j < size; j++ {
-			a[i][j] = rand.Intn(100)
-			b[i][j] = rand.Intn(100)
+	for i := 0; i < dim; i++ {
+		for j := 0; j < dim; j++ {
+			a[i][j] = rand.Intn(max_value)
+			b[i][j] = rand.Intn(max_value)
 		}
 	}
 

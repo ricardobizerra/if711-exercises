@@ -10,7 +10,7 @@ import (
 
 // Formato: Tamanho <5 caracteres> JSON codificado <tamanho caracteres> \xFF
 func ReceiveUDPMessage(conn *net.UDPConn) ([]byte, *net.UDPAddr) {
-	buffer := make([]byte, 16000)
+	buffer := make([]byte, 64000)
 	_, addr, err := conn.ReadFromUDP(buffer)
 	if err != nil {
 		fmt.Println(err)
