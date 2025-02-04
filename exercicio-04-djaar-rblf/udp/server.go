@@ -25,7 +25,7 @@ func Server() {
 }
 
 func handleUDPConnection(conn *net.UDPConn) {
-	var msgFromClient shared.Request
+	var msgRequest shared.Request
 
 	defer func(conn *net.UDPConn) {
 		err := conn.Close()
@@ -36,34 +36,21 @@ func handleUDPConnection(conn *net.UDPConn) {
 	}(conn)
 
 	for {
-		var msg []byte
-		_, err := conn.Read(msg)
-
-		for {
-			if err != nil && err.Error() == "EOF" {
-				break
-			} else if err != nil {
-				fmt.Println(err)
-				os.Exit(0)
-			}
-			if len(msg) > 0 {
-				break
-			}
-		}
-		fmt.Println(msg)
-		err = json.Unmarshal(msg, &msgFromClient)
+		msg_byte, addr := ReceiveUDPMessage(conn)
+		msg := string(msg_byte[:])
+		err := json.Unmarshal([]byte(msg), &msgRequest)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(0)
 		}
 
-		operation := msgFromClient.Operation
+		operation := msgRequest.Operation
 		if operation != "Mul" {
 			panic("The only operation accepted is 'Mul'.")
 		}
 
-		m1 := msgFromClient.A
-		m2 := msgFromClient.B
+		m1 := msgRequest.A
+		m2 := msgRequest.B
 
 		r := matrix.Multiply(m1, m2)
 
@@ -74,10 +61,6 @@ func handleUDPConnection(conn *net.UDPConn) {
 			os.Exit(0)
 		}
 
-		_, err = conn.Write(msgToClient)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(0)
-		}
+		SendUDPMessageAddr(conn, addr, msgToClient)
 	}
 }
