@@ -54,7 +54,7 @@ func Client(invocations int, matrix_size int, max_value_matrix int) Result {
 			panic(err)
 		}
 
-		elapsedTime := float64(time.Since(startTime).Milliseconds())
+		elapsedTime := float64(time.Since(startTime).Microseconds()) / 1000
 		RTTList = append(RTTList, elapsedTime)
 	}
 
