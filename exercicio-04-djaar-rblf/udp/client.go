@@ -1,4 +1,4 @@
-package tcp
+package udp
 
 import (
 	"encoding/json"
@@ -17,25 +17,22 @@ func Client(invocations int, matrix_size int, max_value_matrix int) Result {
 	var response shared.Reply
 	RTTList := [](float64){}
 
-	r, err := net.ResolveTCPAddr("tcp", "localhost:8080")
+	addr, err := net.ResolveUDPAddr("udp", "localhost:8080")
 	if err != nil {
 		panic(err)
 	}
 
-	conn, err := net.DialTCP("tcp", nil, r)
+	conn, err := net.DialUDP("udp", nil, addr)
 	if err != nil {
 		panic(err)
 	}
 
-	defer func(conn *net.TCPConn) {
+	defer func(conn *net.UDPConn) {
 		err := conn.Close()
 		if err != nil {
 			panic(err)
 		}
 	}(conn)
-
-	jsonDecoder := json.NewDecoder(conn)
-	jsonEncoder := json.NewEncoder(conn)
 
 	for i := 0; i < invocations; i++ {
 		a, b := shared.GenerateRandomMatrixes(matrix_size, max_value_matrix)
@@ -44,12 +41,13 @@ func Client(invocations int, matrix_size int, max_value_matrix int) Result {
 
 		startTime := time.Now()
 
-		err := jsonEncoder.Encode(msgToServer)
+		msg, err := json.Marshal(msgToServer)
 		if err != nil {
 			panic(err)
 		}
-
-		err = jsonDecoder.Decode(&response)
+		SendUDPMessage(conn, msg)
+		msg, _ = ReceiveUDPMessage(conn)
+		err = json.Unmarshal(msg, &response)
 		if err != nil {
 			panic(err)
 		}
