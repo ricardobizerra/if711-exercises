@@ -20,8 +20,16 @@ func main() {
 			tcp.Server()
 		case "client":
 			a, b := shared.GenerateRandomMatrixes(60, 100)
+
 			tcp.Client(10000, a, b)
-			fmt.Println("rodou td")
+
+			rttValues, err := shared.ReadRTTValues("tcp-results.txt")
+
+			if err != nil {
+				panic(err)
+			}
+
+			shared.CalculateStats(rttValues)
 		default:
 			fmt.Println("Usage: go run main.go [tcp|udp] [server|client]")
 			os.Exit(1)
@@ -33,8 +41,16 @@ func main() {
 			udp.Server()
 		case "client":
 			a, b := shared.GenerateRandomMatrixes(60, 100)
+
 			udp.Client(10000, a, b)
-			fmt.Println("rodou td")
+
+			rttValues, err := shared.ReadRTTValues("udp-results.txt")
+
+			if err != nil {
+				panic(err)
+			}
+
+			shared.CalculateStats(rttValues)
 		default:
 			fmt.Println("Usage: go run main.go [tcp|udp] [server|client]")
 			os.Exit(1)
