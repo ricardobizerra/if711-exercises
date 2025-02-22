@@ -13,7 +13,7 @@ type Result struct {
 	Median   float64
 }
 
-func Client(invocations int, matrix_size int, max_value_matrix int) Result {
+func Client(invocations int, a [][]int, b [][]int) Result {
 	var response shared.Reply
 	RTTList := [](float64){}
 
@@ -35,8 +35,6 @@ func Client(invocations int, matrix_size int, max_value_matrix int) Result {
 	}(conn)
 
 	for i := 0; i < invocations; i++ {
-		a, b := shared.GenerateRandomMatrixes(matrix_size, max_value_matrix)
-
 		msgToServer := shared.Request{Operation: "Mul", A: a, B: b}
 
 		startTime := time.Now()

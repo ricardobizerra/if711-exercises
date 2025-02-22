@@ -1,6 +1,7 @@
 package main
 
 import (
+	"exercicio-05-djaar-rblf/shared"
 	"exercicio-05-djaar-rblf/tcp"
 	"exercicio-05-djaar-rblf/udp"
 	"fmt"
@@ -18,7 +19,9 @@ func main() {
 		case "server":
 			tcp.Server()
 		case "client":
-			tcpResult := tcp.Client(10000, 60, 100)
+			a, b := shared.GenerateRandomMatrixes(60, 100)
+
+			tcpResult := tcp.Client(10000, a, b)
 
 			fmt.Println("Average RTT time:", tcpResult.Average, "ms")
 			fmt.Println("Median RTT time:", tcpResult.Median, "ms")
@@ -33,7 +36,10 @@ func main() {
 		case "server":
 			udp.Server()
 		case "client":
-			udpResult := udp.Client(10000, 60, 100)
+			a, b := shared.GenerateRandomMatrixes(60, 100)
+
+			udpResult := udp.Client(10000, a, b)
+
 			fmt.Println("Average RTT time:", udpResult.Average, "ms")
 			fmt.Println("Median RTT time:", udpResult.Median, "ms")
 			fmt.Println("Variance RTT time:", udpResult.Variance, "ms")
