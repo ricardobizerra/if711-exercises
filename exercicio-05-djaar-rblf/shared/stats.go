@@ -1,6 +1,10 @@
 package shared
 
-import "sort"
+import (
+	"fmt"
+	"math"
+	"sort"
+)
 
 func CalculateAverage(numeros []float64) float64 {
 	if len(numeros) == 0 {
@@ -23,6 +27,10 @@ func CalculateVariance(arr []float64, media float64) float64 {
 	return somaQuadrados / float64(len(arr))
 }
 
+func CalculateStandardDeviation(arr []float64, media float64) float64 {
+	return math.Sqrt(CalculateVariance(arr, media))
+}
+
 func CalculateMedian(arr []float64) float64 {
 	sort.Float64s(arr)
 
@@ -32,4 +40,14 @@ func CalculateMedian(arr []float64) float64 {
 	} else {
 		return (arr[n/2-1] + arr[n/2]) / 2.0
 	}
+}
+
+func CalculateStats(arr []float64) {
+	average := CalculateAverage(arr)
+	stdDev := CalculateStandardDeviation(arr, average)
+	median := CalculateMedian(arr)
+
+	fmt.Println("Média:        ", average, "ms")
+	fmt.Println("Desvio padrão:", stdDev, "ms")
+	fmt.Println("Mediana:      ", median, "ms")
 }
