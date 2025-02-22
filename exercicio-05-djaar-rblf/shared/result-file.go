@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 func WriteRTTValue(fileName string, elapsedTime float64) {
@@ -25,4 +26,32 @@ func WriteRTTValue(fileName string, elapsedTime float64) {
 	}
 
 	writer.Flush()
+}
+
+func ReadRTTValues(filename string) ([]float64, error) {
+	var values []float64
+
+	file, err := os.Open(filename)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		num, err := strconv.ParseFloat(scanner.Text(), 64)
+		if err != nil {
+			return nil, err
+		}
+		values = append(values, num)
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return values, nil
 }
