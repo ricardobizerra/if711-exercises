@@ -20,12 +20,8 @@ func main() {
 			tcp.Server()
 		case "client":
 			a, b := shared.GenerateRandomMatrixes(60, 100)
-
-			tcpResult := tcp.Client(10000, a, b)
-
-			fmt.Println("Average RTT time:", tcpResult.Average, "ms")
-			fmt.Println("Median RTT time:", tcpResult.Median, "ms")
-			fmt.Println("Variance RTT time:", tcpResult.Variance, "ms")
+			tcp.Client(10000, a, b)
+			fmt.Println("rodou td")
 		default:
 			fmt.Println("Usage: go run main.go [tcp|udp] [server|client]")
 			os.Exit(1)
@@ -37,12 +33,8 @@ func main() {
 			udp.Server()
 		case "client":
 			a, b := shared.GenerateRandomMatrixes(60, 100)
-
-			udpResult := udp.Client(10000, a, b)
-
-			fmt.Println("Average RTT time:", udpResult.Average, "ms")
-			fmt.Println("Median RTT time:", udpResult.Median, "ms")
-			fmt.Println("Variance RTT time:", udpResult.Variance, "ms")
+			udp.Client(10000, a, b)
+			fmt.Println("rodou td")
 		default:
 			fmt.Println("Usage: go run main.go [tcp|udp] [server|client]")
 			os.Exit(1)

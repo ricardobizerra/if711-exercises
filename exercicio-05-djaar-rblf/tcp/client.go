@@ -7,15 +7,8 @@ import (
 	"time"
 )
 
-type Result struct {
-	Average  float64
-	Variance float64
-	Median   float64
-}
-
-func Client(invocations int, a [][]int, b [][]int) Result {
+func Client(invocations int, a [][]int, b [][]int) {
 	var response shared.Reply
-	RTTList := [](float64){}
 
 	r, err := net.ResolveTCPAddr("tcp", "localhost:8080")
 	if err != nil {
@@ -52,15 +45,8 @@ func Client(invocations int, a [][]int, b [][]int) Result {
 			panic(err)
 		}
 
-		elapsedTime := float64(time.Since(startTime).Microseconds()) / 1000
-		RTTList = append(RTTList, elapsedTime)
-	}
+		elapsedTime := float64(time.Since(startTime).Milliseconds())
 
-	average := shared.CalculateAverage(RTTList)
-
-	return Result{
-		Average:  average,
-		Median:   shared.CalculateMedian(RTTList),
-		Variance: shared.CalculateVariance(RTTList, average),
+		shared.WriteRTTValue("tcp-results.txt", elapsedTime)
 	}
 }
