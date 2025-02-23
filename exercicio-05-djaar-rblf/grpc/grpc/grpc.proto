@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package grpc;
+option go_package = "/grpc/grpc";
+service MatrixMul {
+    rpc Mul (Request) returns (Reply) {}
+}
+
+message Request {
+    string Op = 1;
+    Matrix m1 = 2;
+    Matrix m2 = 3;
+}
+
+message Reply {
+    Matrix m = 1;
+}
+
+message Matrix {
+    repeated Row m = 1;
+}
+
+message Row {
+    repeated int32 row = 1;
+}
