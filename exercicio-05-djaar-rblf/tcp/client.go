@@ -45,7 +45,8 @@ func Client(invocations int, a [][]int, b [][]int) {
 			panic(err)
 		}
 
-		elapsedTime := float64(time.Since(startTime).Milliseconds())
+		// Tempo em milisegundos mais preciso
+		elapsedTime := float64(time.Since(startTime).Nanoseconds()) / 1000000
 
 		shared.WriteRTTValue("tcp-results.txt", elapsedTime)
 	}
