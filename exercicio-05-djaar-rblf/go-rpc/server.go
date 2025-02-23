@@ -7,23 +7,26 @@ import (
 )
 
 func Server() {
-	go rpcServer()
-	fmt.Scanln()
-}
-
-func rpcServer() {
 	matrix_service := new(MatrixService)
 
 	server := rpc.NewServer()
 	server.RegisterName("Matrix", matrix_service)
 
-	ln, err := net.Listen("tcp", ":8080")
-
+	ln, err := net.Listen("tcp", "0.0.0.0:8080")
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Println("Server listening on port 8080")
 
-	server.Accept(ln)
+	for {
+		conn, err := ln.Accept()
+
+		if err != nil {
+			fmt.Println("Connection error:", err)
+			continue
+		}
+
+		go server.ServeConn(conn)
+	}
 }

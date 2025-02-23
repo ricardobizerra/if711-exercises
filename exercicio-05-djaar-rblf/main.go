@@ -43,8 +43,7 @@ func main() {
 			a, b := shared.GenerateRandomMatrixes(60, 100)
 
 			invocations := 10000
-			number_clients := 20
-			goRpc.Client(invocations, a, b, number_clients)
+			goRpc.Client(invocations, a, b)
 
 			rttValues, err := shared.ReadRTTValues("go-rpc-results.txt")
 
