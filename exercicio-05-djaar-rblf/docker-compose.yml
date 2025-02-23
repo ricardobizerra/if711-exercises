@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  go-rpc-server:
+    build: .
+    command: ["./app", "go-rpc", "server"]
+    ports:
+      - "8080:8080"
+
+  go-rpc-client:
+    build: .
+    command: ["./app", "go-rpc", "client"]
+    depends_on:
+      - go-rpc-server

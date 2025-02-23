@@ -3,27 +3,17 @@ package goRpc
 import (
 	"exercicio-05-djaar-rblf/shared"
 	"net/rpc"
-	"sync"
 	"time"
 )
 
-func Client(invocations int, a [][]int, b [][]int, number_clients int) {
-	var wg sync.WaitGroup
-
-	for i := 0; i < number_clients; i++ {
-		wg.Add(1)
-		go rpcClient(&wg, invocations, a, b)
-	}
-
-	wg.Wait()
+func Client(invocations int, a [][]int, b [][]int) {
+	rpcClient(invocations, a, b)
 }
 
-func rpcClient(wg *sync.WaitGroup, invocations int, a [][]int, b [][]int) {
-	defer wg.Done()
-
+func rpcClient(invocations int, a [][]int, b [][]int) {
 	var response shared.Reply
 
-	client, err := rpc.Dial("tcp", ":8080")
+	client, err := rpc.Dial("tcp", "go-rpc-server:8080")
 
 	if err != nil {
 		panic(err)
