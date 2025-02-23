@@ -26,7 +26,14 @@ func main() {
 			grpcServer.Server()
 		case "client":
 			a, b := shared.GenerateRandomMatrixes32(dim, max_value)
+
 			grpcClient.Client(invocations, a, b)
+
+			rttValues, err := shared.ReadRTTValues("grpc-results.txt")
+			if err != nil {
+				panic(err)
+			}
+			shared.CalculateStats(rttValues)
 		}
 	case "tcp":
 		switch os.Args[2] {
