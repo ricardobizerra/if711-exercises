@@ -14,6 +14,7 @@ func main() {
 	dim := 20
 	max_value := 100
 	invocations := 10000
+	number_clients := 20
 
 	if len(os.Args) < 3 {
 		fmt.Println("Usage: go run main.go [tcp|go-rpc|grpc] [server|client]")
@@ -55,16 +56,13 @@ func main() {
 			fmt.Println("Usage: go run main.go [tcp|go-rpc|grpc] [server|client]")
 			os.Exit(1)
 		}
-
 	case "go-rpc":
-		fmt.Println("Usage: go run main.go [tcp] [server|client]")
 		switch os.Args[2] {
 		case "server":
 			goRpc.Server()
 		case "client":
 			a, b := shared.GenerateRandomMatrixes(dim, max_value)
 
-			number_clients := 20
 			goRpc.Client(invocations, a, b, number_clients)
 
 			rttValues, err := shared.ReadRTTValues("go-rpc-results.txt")
