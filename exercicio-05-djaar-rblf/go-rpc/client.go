@@ -13,7 +13,7 @@ func Client(invocations int, a [][]int, b [][]int) {
 func rpcClient(invocations int, a [][]int, b [][]int) {
 	var response shared.Reply
 
-	client, err := rpc.Dial("tcp", "go-rpc-server:8080")
+	client, err := rpc.Dial("tcp", "rpc-server:8080")
 
 	if err != nil {
 		panic(err)
@@ -34,6 +34,6 @@ func rpcClient(invocations int, a [][]int, b [][]int) {
 
 		elapsedTime := float64(time.Since(startTime).Nanoseconds()) / 1000000
 
-		shared.WriteRTTValue("go-rpc-results.txt", elapsedTime)
+		shared.WriteRTTValue("/data/go-rpc-results.txt", elapsedTime)
 	}
 }

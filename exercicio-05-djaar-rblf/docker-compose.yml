@@ -1,14 +1,16 @@
 version: "3.8"
 
 services:
-  go-rpc-server:
+  rpc-server:
     build: .
-    command: ["./app", "go-rpc", "server"]
+    command: ["./app", "${PROTOCOL}", "server"]
     ports:
       - "8080:8080"
 
-  go-rpc-client:
+  rpc-client:
     build: .
-    command: ["./app", "go-rpc", "client"]
+    volumes:
+      - ./shared-volume:/data
+    command: ["./app", "${PROTOCOL}", "client"]
     depends_on:
-      - go-rpc-server
+      - rpc-server

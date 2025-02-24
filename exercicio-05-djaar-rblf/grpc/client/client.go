@@ -13,9 +13,8 @@ import (
 )
 
 func Client(invocations int, a [][]int32, b [][]int32) {
-	// var response shared.Reply
 	// Set up a connection to the server.
-	conn, err := grpc.NewClient("localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("rpc-server:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -39,6 +38,6 @@ func Client(invocations int, a [][]int32, b [][]int32) {
 		// Tempo em milisegundos mais preciso
 		elapsedTime := float64(time.Since(startTime).Nanoseconds()) / 1000000
 
-		shared.WriteRTTValue("grpc-results.txt", elapsedTime)
+		shared.WriteRTTValue("/data/grpc-results.txt", elapsedTime)
 	}
 }

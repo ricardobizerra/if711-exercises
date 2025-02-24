@@ -27,7 +27,7 @@ func (e *OpError) Error() string {
 // Mul implements grpc.MatrixMulServer
 func (s *server) Mul(_ context.Context, in *pb.Request) (*pb.Reply, error) {
 	op := in.GetOp()
-	log.Printf("Received: %v", op)
+	// log.Printf("Received: %v", op)
 	if op != "Mul" {
 		return nil, &OpError{"Wrong Operation"}
 	}
@@ -39,7 +39,7 @@ func (s *server) Mul(_ context.Context, in *pb.Request) (*pb.Reply, error) {
 }
 
 func Server() {
-	lis, err := net.Listen("tcp", "localhost:8080")
+	lis, err := net.Listen("tcp", "0.0.0.0:8080")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
