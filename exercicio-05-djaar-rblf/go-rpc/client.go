@@ -7,10 +7,6 @@ import (
 )
 
 func Client(invocations int, a [][]int, b [][]int) {
-	rpcClient(invocations, a, b)
-}
-
-func rpcClient(invocations int, a [][]int, b [][]int) {
 	var response shared.Reply
 
 	client, err := rpc.Dial("tcp", "rpc-server:8080")
