@@ -8,7 +8,7 @@ import (
 )
 
 func WriteRTTValue(fileName string, elapsedTime float64) {
-	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 
 	if err != nil {
 		fmt.Println("Error opening file:", err)
