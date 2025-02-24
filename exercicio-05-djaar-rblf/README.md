@@ -9,13 +9,14 @@ O slide está disponível no arquivo `slides.pdf`.
 Para rodar a imagem Docker e, assim, **rodar o exercício** cliente-servidor, execute o seguinte comando:
 
 ```bash
-PROTOCOL=<protocol> docker compose up --build
+PROTOCOL=<protocol> docker compose up --build --scale rpc-client=<n_clients>
 ```
 
 Observações:
 
 - `<protocol>` deve ser `go-rpc` ou `grpc`.
 - A flag `--build` apenas é necessária na primeira execução ou, ainda, em caso de mudança no código.
+- `<n_clients>` é o número de clientes a serem executados. Caso seja 1, a flag `--scale rpc-client=1` não é necessária.
 
 Para conferir um **resumo dos resultados**, com valores de média, mediana e desvio padrão de 10.000 execuções, execute o seguinte comando:
 
