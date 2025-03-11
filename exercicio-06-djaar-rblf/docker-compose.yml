@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  rpc-server:
+    build: .
+    command: ["./app", "${PROTOCOL}", "server"]
+    ports:
+      - "8080:8080"
+
+  rpc-client:
+    build: .
+    volumes:
+      - ./shared-volume:/data
+    command: ["./app", "${PROTOCOL}", "client"]
+    depends_on:
+      - rpc-server
