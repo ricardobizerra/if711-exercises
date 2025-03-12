@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"exercicio-06-djaar-rblf/shared"
 	"fmt"
+	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
@@ -71,6 +72,8 @@ func Client(invocations int, a [][]int, b [][]int) {
 			panic(err)
 		}
 
+		startTime := time.Now()
+
 		err = ch.Publish(
 			"",
 			"matrix-multiplier-queue",
@@ -89,6 +92,9 @@ func Client(invocations int, a [][]int, b [][]int) {
 		}
 
 		m := <-msgs
+
+		elapsedTime := float64(time.Since(startTime).Nanoseconds()) / 1000000
+		shared.WriteRTTValue("/data/rabbitmq-results.txt", elapsedTime)
 
 		msgResponse := shared.Reply{}
 		err = json.Unmarshal(m.Body, &msgResponse)
