@@ -1,9 +1,28 @@
 version: "3.8"
 
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
   rpc-server:
     build: .
     command: ["./app", "${PROTOCOL}", "server"]
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
     ports:
       - "8080:8080"
 
@@ -13,4 +32,8 @@ services:
       - ./shared-volume:/data
     command: ["./app", "${PROTOCOL}", "client"]
     depends_on:
-      - rpc-server
+      rpc-server:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure

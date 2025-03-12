@@ -9,7 +9,7 @@ import (
 )
 
 func Client(invocations int, a [][]int, b [][]int) {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672")
+	conn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672")
 
 	if err != nil {
 		panic(err)
@@ -29,7 +29,7 @@ func Client(invocations int, a [][]int, b [][]int) {
 		"matrix-multiplier-queue",
 		false,
 		false,
-		true,
+		false,
 		false,
 		nil,
 	)
