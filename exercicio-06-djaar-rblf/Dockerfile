@@ -7,4 +7,6 @@ RUN go mod download
 
 COPY . .
 
+RUN mkdir -p /app/data && chmod -R 777 /app/data
+
 RUN go build -o app main.go

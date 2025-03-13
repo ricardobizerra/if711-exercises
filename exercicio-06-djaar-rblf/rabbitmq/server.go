@@ -25,7 +25,7 @@ func Server() {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"matrix-multiplier-queue",
+		"matrix-multiplier-request-queue",
 		false,
 		false,
 		false,

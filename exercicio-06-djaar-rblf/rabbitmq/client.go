@@ -3,7 +3,6 @@ package rabbitmq
 import (
 	"encoding/json"
 	"exercicio-06-djaar-rblf/shared"
-	"fmt"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -27,7 +26,7 @@ func Client(invocations int, a [][]int, b [][]int) {
 	defer ch.Close()
 
 	responseQueue, err := ch.QueueDeclare(
-		"matrix-multiplier-queue",
+		"matrix-multiplier-response-queue",
 		false,
 		false,
 		false,
@@ -76,7 +75,7 @@ func Client(invocations int, a [][]int, b [][]int) {
 
 		err = ch.Publish(
 			"",
-			"matrix-multiplier-queue",
+			"matrix-multiplier-request-queue",
 			false,
 			false,
 			amqp.Publishing{
@@ -94,7 +93,7 @@ func Client(invocations int, a [][]int, b [][]int) {
 		m := <-msgs
 
 		elapsedTime := float64(time.Since(startTime).Nanoseconds()) / 1000000
-		shared.WriteRTTValue("/data/rabbitmq-results.txt", elapsedTime)
+		shared.WriteRTTValue("/app/data/rabbitmq-results.txt", elapsedTime)
 
 		msgResponse := shared.Reply{}
 		err = json.Unmarshal(m.Body, &msgResponse)
@@ -102,7 +101,5 @@ func Client(invocations int, a [][]int, b [][]int) {
 		if err != nil {
 			panic(err)
 		}
-
-		fmt.Println(msgResponse)
 	}
 }
