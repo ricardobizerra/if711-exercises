@@ -29,7 +29,7 @@ services:
   mqtt:
     image: eclipse-mosquitto
     ports:
-      - "1883:1883"
+      - "3883:3883"
       - "9001:9001"
     depends_on:
       cleanup:
@@ -38,7 +38,7 @@ services:
       - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
     restart: "no"
     healthcheck:
-      test: ["CMD", "nc", "-zv", "localhost", "1883"]
+      test: ["CMD", "nc", "-zv", "localhost", "3883"]
       interval: 10s
       retries: 5
       start_period: 10s

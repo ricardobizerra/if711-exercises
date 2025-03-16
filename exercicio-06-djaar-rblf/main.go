@@ -1,6 +1,7 @@
 package main
 
 import (
+	"exercicio-06-djaar-rblf/mqtt"
 	"exercicio-06-djaar-rblf/rabbitmq"
 	"exercicio-06-djaar-rblf/shared"
 	"fmt"
@@ -31,7 +32,6 @@ func main() {
 	switch os.Args[1] {
 
 	case "rabbitmq":
-
 		switch os.Args[2] {
 
 		case "server":
@@ -53,7 +53,25 @@ func main() {
 		default:
 			printAndExit()
 		}
+	case "mqtt":
+		switch os.Args[2] {
 
+		case "server":
+			mqtt.Server()
+		case "client":
+			a, b := shared.GenerateRandomMatrixes(dim, max_value)
+			mqtt.Client(invocations, a, b)
+		case "results":
+			rttValues, err := shared.ReadRTTValues("/app/data/mqtt-results.txt")
+			if err != nil {
+				fmt.Println("Error reading RTT values")
+				panic(err)
+			}
+			shared.CalculateStats(rttValues)
+
+		default:
+			printAndExit()
+		}
 	default:
 		printAndExit()
 	}
