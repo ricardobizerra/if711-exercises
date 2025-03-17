@@ -52,6 +52,8 @@ func Client(invocations int, a [][]int, b [][]int) {
 		panic(err)
 	}
 
+	correlationIDs := make(map[string]bool)
+
 	for i := 0; i < invocations; i++ {
 		msgRequest := shared.Request{
 			Operation: "Mul",
@@ -70,6 +72,8 @@ func Client(invocations int, a [][]int, b [][]int) {
 		if err != nil {
 			panic(err)
 		}
+
+		correlationIDs[correlationId] = true
 
 		startTime := time.Now()
 
@@ -92,14 +96,18 @@ func Client(invocations int, a [][]int, b [][]int) {
 
 		m := <-msgs
 
-		elapsedTime := float64(time.Since(startTime).Nanoseconds()) / 1000000
-		shared.WriteRTTValue("/app/data/rabbitmq-results.txt", elapsedTime)
+		if _, ok := correlationIDs[m.CorrelationId]; ok {
+			elapsedTime := float64(time.Since(startTime).Nanoseconds()) / 1000000
+			shared.WriteRTTValue("/app/data/rabbitmq-results.txt", elapsedTime)
 
-		msgResponse := shared.Reply{}
-		err = json.Unmarshal(m.Body, &msgResponse)
+			msgResponse := shared.Reply{}
+			err = json.Unmarshal(m.Body, &msgResponse)
 
-		if err != nil {
-			panic(err)
+			if err != nil {
+				panic(err)
+			}
+
+			delete(correlationIDs, m.CorrelationId)
 		}
 	}
 }
