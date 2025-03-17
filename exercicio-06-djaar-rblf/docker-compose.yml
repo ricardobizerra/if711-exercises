@@ -1,16 +1,77 @@
 version: "3.8"
 
 services:
-  rpc-server:
+  cleanup:
+    image: alpine
+    volumes:
+      - results-data:/app/data
+    command: ["/bin/sh", "-c", "rm -rf /app/data/*"]
+    restart: "no"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_LOGS=error
+    depends_on:
+      cleanup:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+  mqtt:
+    image: eclipse-mosquitto
+    ports:
+      - "3883:3883"
+      - "9001:9001"
+    depends_on:
+      cleanup:
+        condition: service_completed_successfully
+    volumes:
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    restart: "no"
+    healthcheck:
+      test: ["CMD", "nc", "-zv", "localhost", "3883"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+  server:
     build: .
     command: ["./app", "${PROTOCOL}", "server"]
-    ports:
-      - "8080:8080"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mqtt:
+        condition: service_healthy
+    restart: "no"
 
-  rpc-client:
+  client:
     build: .
     volumes:
-      - ./shared-volume:/data
+      - results-data:/app/data
     command: ["./app", "${PROTOCOL}", "client"]
     depends_on:
-      - rpc-server
+      server:
+        condition: service_started
+    restart: "no"
+
+  results:
+    build: .
+    volumes:
+      - results-data:/app/data
+    command: ["/bin/sh", "-c", "sleep 5 && ./app ${PROTOCOL} results"]
+    depends_on:
+      client:
+        condition: service_completed_successfully
+    restart: "no"
+
+volumes:
+  results-data:
