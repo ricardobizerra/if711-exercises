@@ -2,6 +2,7 @@ package rabbitmq
 
 import (
 	"encoding/json"
+	"exercicio-06-djaar-rblf/matrix"
 	"exercicio-06-djaar-rblf/shared"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -60,11 +61,7 @@ func Server() {
 		}
 
 		response := shared.Reply{}
-		err = new(MatrixService).Multiply(msg, &response)
-
-		if err != nil {
-			panic(err)
-		}
+		response.R = matrix.Multiply(msg.A, msg.B)
 
 		responseBytes, err := json.Marshal(response)
 
